@@ -48,8 +48,6 @@ const templateProduct = fs.readFileSync(
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
-console.log(`DIR: ${__dirname}`);
-
 // HTTP -
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
