@@ -1,11 +1,11 @@
 const fs = require('fs');
 const http = require('http');
+const { default: slugify } = require('slugify');
 const url = require('url');
 
 const replaceTemplate = require('./modules/replaceTemplate');
 
-/*
-FILES -
+// FILES -
 
 // BLOCKING CODE - SYNCHRONOUS CODE
 
@@ -30,7 +30,6 @@ fs.readFile('txt/start.txt', 'utf-8', (_, data1) => {
   });
 });
 console.log('Will read file?');
-*/
 
 const templateOverview = fs.readFileSync(
   `${__dirname}/templates/template-overview.html`,
@@ -48,6 +47,11 @@ const templateProduct = fs.readFileSync(
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
+const slugs = dataObj.map((product) =>
+  slugify(product.productName, { lower: true })
+);
+console.log(slugs);
+
 // HTTP -
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
@@ -59,18 +63,27 @@ const server = http.createServer((req, res) => {
     });
 
     const cardsHtml = dataObj
-      .map((card) => replaceTemplate(templateCard, card))
+      .map((card) => {
+        card.pathName = convertNameToPathName(card.productName);
+        return replaceTemplate(templateCard, card);
+      })
       .join('');
     const result = templateOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
     res.end(result);
 
     // Product page -
-  } else if (pathname === '/product') {
+  } else if (pathname.startsWith('/product')) {
     res.writeHead(200, {
       'Content-type': 'text/html',
     });
 
-    const product = dataObj[query.id];
+    console.log(pathname, pathname.substring('/product/'.length));
+    const productName = convertPathNameToName(
+      pathname.substring('/product/'.length)
+    );
+
+    const product = dataObj.find((card) => card.productName === productName);
+
     const output = replaceTemplate(templateProduct, product);
     res.end(output);
 
@@ -94,3 +107,17 @@ const server = http.createServer((req, res) => {
 server.listen(3000, () => {
   console.log('Listening on port 3000');
 });
+
+const convertPathNameToName = (path) => {
+  return path
+    .split('-')
+    .map((word) => word[0].toUpperCase() + word.substring(1))
+    .join(' ');
+};
+
+const convertNameToPathName = (path) => {
+  return path
+    .split(' ')
+    .map((word) => word.toLowerCase())
+    .join('-');
+};

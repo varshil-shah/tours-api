@@ -1,12 +1,14 @@
 module.exports = (templateCard, product) => {
-  let output = templateCard.replace(/{%NAME%}/g, product.productName);
-  output = output.replace(/{%IMAGE%}/g, product.image);
-  output = output.replace(/{%QUANTITY%}/g, product.quantity);
-  output = output.replace(/{%PRICE%}/g, product.price);
-  output = output.replace(/{%ID%}/g, product.id);
-  output = output.replace(/{%FROM%}/g, product.from);
-  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
-  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  let output = templateCard
+    .replace(/{%NAME%}/g, product.productName)
+    .replace(/{%PATHNAME%}/g, product.pathName)
+    .replace(/{%IMAGE%}/g, product.image)
+    .replace(/{%QUANTITY%}/g, product.quantity)
+    .replace(/{%PRICE%}/g, product.price)
+    .replace(/{%ID%}/g, product.id)
+    .replace(/{%FROM%}/g, product.from)
+    .replace(/{%NUTRIENTS%}/g, product.nutrients)
+    .replace(/{%DESCRIPTION%}/g, product.description);
 
   if (!product.organic)
     output = output.replace(/{%NON_ORGANIC%}/g, 'not-organic');
