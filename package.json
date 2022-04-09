@@ -1,0 +1,22 @@
+{
+  "name": "nodejs-bootcamp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Varshil-Shah/nodejs-bootcamp.git"
+  },
+  "author": "Varshil Shah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Varshil-Shah/nodejs-bootcamp/issues"
+  },
+  "homepage": "https://github.com/Varshil-Shah/nodejs-bootcamp#readme",
+  "dependencies": {
+    "superagent": "^7.1.2"
+  }
+}
