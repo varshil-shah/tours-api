@@ -81,16 +81,31 @@ const storeDogPictureUrl = async () => {
     const data = await readFilePromise('dog.txt');
     console.log(data);
 
-    const res = await superagent.get(
+    const res1 = superagent.get(
       `https://dog.ceo/api/breed/${data.trim()}/images/random`
     );
-    console.log(res.body.message);
+    const res2 = superagent.get(
+      `https://dog.ceo/api/breed/${data.trim()}/images/random`
+    );
+    const res3 = superagent.get(
+      `https://dog.ceo/api/breed/${data.trim()}/images/random`
+    );
 
-    await writeFilePromise('dog-url.txt', res.body.message);
+    const all = await Promise.all([res1, res2, res3]);
+    const imgs = all.map((ele) => ele.body.message);
+
+    await writeFilePromise('dog-url.txt', imgs.join('\n'));
     console.log(`Writing to file completed`);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
+  return '2. READY 🐶';
 };
 
-storeDogPictureUrl();
+console.log(`1. Will get dog pic`);
+storeDogPictureUrl()
+  .then((x) => {
+    console.log(x);
+    console.log(`3. Done getting dog pic`);
+  })
+  .catch((err) => console.log(err));
