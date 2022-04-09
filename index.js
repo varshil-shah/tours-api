@@ -43,7 +43,7 @@ const superagent = require('superagent');
 // READ FILE AND RETURN PROMISE -
 const readFilePromise = (file) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(file, (err, data) => {
+    fs.readFile(file, 'utf-8', (err, data) => {
       if (err) reject('I could not find that file 😢');
       resolve(data);
     });
@@ -59,6 +59,7 @@ const writeFilePromise = (file, data) => {
   });
 };
 
+/*
 readFilePromise(`${__dirname}/dogg.txt`)
   .then((data) => {
     return superagent.get(`https://dog.ceo/api/breed/${data}/images/random`);
@@ -72,3 +73,24 @@ readFilePromise(`${__dirname}/dogg.txt`)
   .catch((err) => {
     console.log(err);
   });
+*/
+
+// ASYNC-AWAIT -
+const storeDogPictureUrl = async () => {
+  try {
+    const data = await readFilePromise('dog.txt');
+    console.log(data);
+
+    const res = await superagent.get(
+      `https://dog.ceo/api/breed/${data.trim()}/images/random`
+    );
+    console.log(res.body.message);
+
+    await writeFilePromise('dog-url.txt', res.body.message);
+    console.log(`Writing to file completed`);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+storeDogPictureUrl();
