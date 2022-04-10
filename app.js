@@ -76,6 +76,23 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const id = +req.params.id;
+
+  // check if the id is valid -
+  if (id > tours.length - 1) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Id not found!',
+    });
+  }
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Hi from NodeJS server',
