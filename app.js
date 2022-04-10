@@ -9,21 +9,29 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    message: 'Hi from NodeJS server',
-    app: 'Natours',
-  });
-});
+app.get('/api/v1/tours/:id', (req, res) => {
+  const id = +req.params.id;
+  const tour = tours.find((ele) => ele.id === id);
 
-app.post('/', (req, res) => {
-  res.send('You can post to this endpoint...');
+  if (id > tours.length - 1) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Id not found!',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour,
+    },
+  });
 });
 
 app.get('/api/v1/tours', (req, res) => {
   res.status(200).json({
     status: 'success',
-    results: tours.length,
+    results: tours.length - 1,
     data: {
       tours: tours,
     },
@@ -41,13 +49,42 @@ app.post('/api/v1/tours', (req, res) => {
     (err) => {
       res.status(201).json({
         status: 'success',
-        results: tours.length,
         data: {
           tours,
         },
       });
     }
   );
+});
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const id = +req.params.id;
+
+  // check if the id is valid -
+  if (id > tours.length - 1) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Id not found!',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour>',
+    },
+  });
+});
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Hi from NodeJS server',
+    app: 'Natours',
+  });
+});
+
+app.post('/', (req, res) => {
+  res.send('You can post to this endpoint...');
 });
 
 const PORT = 3000;
