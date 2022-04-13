@@ -9,7 +9,7 @@ const app = express();
 // 3rd party middleware -
 app.use(express.json());
 
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
 app.use(express.static('public'));
 
