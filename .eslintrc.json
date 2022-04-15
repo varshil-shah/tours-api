@@ -32,11 +32,5 @@
         "argsIgnorePattern": "req|res|next|val"
       }
     ]
-  },
-  "prettier/prettier": [
-    "error",
-    {
-      "endOfLine": "auto"
-    }
-  ]
+  }
 }
