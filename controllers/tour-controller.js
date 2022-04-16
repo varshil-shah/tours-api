@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const APIFeatures = require('../utils/api-features');
 
 exports.aliasTopTour = (req, res, next) => {
   req.query.limit = '5';
@@ -9,60 +10,13 @@ exports.aliasTopTour = (req, res, next) => {
 
 exports.getAllTours = async (req, res) => {
   try {
-    // BUILD QUERY -
-    const queryObjects = { ...req.query };
-    const excludedFields = ['page', 'sort', 'fields', 'limit'];
-    excludedFields.forEach((ele) => delete queryObjects[ele]);
-
-    // ADVANCE QUERY SEARCH -
-    let queryString = JSON.stringify(queryObjects);
-    queryString = queryString.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
-    );
-
-    let query = Tour.find(JSON.parse(queryString));
-
-    // SORTING
-    // - for descending order sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createdAt');
-    }
-
-    // FIELD LIMITING -
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      console.log(fields);
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v');
-    }
-
-    // PAGINATION -
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 100;
-
-    // page=3&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
-    const skip = (page - 1) * limit;
-
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numberOfTours = await Tour.countDocuments();
-      if (skip >= numberOfTours) throw new Error('This page does not exist');
-    }
-
-    // const query = Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
-
     // EXECUTE QUERY -
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .fieldLimit()
+      .pagination();
+    const tours = await features.query;
 
     res.status(200).json({
       status: 'success',
