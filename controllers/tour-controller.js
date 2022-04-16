@@ -1,9 +1,14 @@
 const Tour = require('../models/tourModel');
 
+exports.aliasTopTour = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,difficulty,summary';
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
-    console.log(`REQUEST QUERY: ${req.query}`);
-
     // BUILD QUERY -
     const queryObjects = { ...req.query };
     const excludedFields = ['page', 'sort', 'fields', 'limit'];
@@ -15,8 +20,6 @@ exports.getAllTours = async (req, res) => {
       /\b(gte|gt|lte|lt)\b/g,
       (match) => `$${match}`
     );
-
-    console.log(`QUERY STRING: ${queryString}`);
 
     let query = Tour.find(JSON.parse(queryString));
 
@@ -36,6 +39,20 @@ exports.getAllTours = async (req, res) => {
       query = query.select(fields);
     } else {
       query = query.select('-__v');
+    }
+
+    // PAGINATION -
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+
+    // page=3&limit=10, 1-10 page 1, 11-20 page 2, 21-30 page 3
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numberOfTours = await Tour.countDocuments();
+      if (skip >= numberOfTours) throw new Error('This page does not exist');
     }
 
     // const query = Tour.find()
