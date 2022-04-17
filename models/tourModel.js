@@ -10,6 +10,12 @@ const tourSchema = new mongoose.Schema(
       trim: true,
       maxlength: [40, 'A tour must have less or equal then 40 characters'],
       minlength: [10, 'A tour must have more or equal then 10 characters'],
+      validate: {
+        validator: function (value) {
+          return /^[a-zA-Z ]*$/.test(value);
+        },
+        message: 'A tour name should contain only alphabets',
+      },
     },
     slug: String,
     secretTour: {
@@ -46,7 +52,16 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'A tour must have a price'],
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        // THIS ONLY WORKS WHEN CREATING NEW DOCUMENT
+        validator: function (value) {
+          return value < this.price;
+        },
+        message: 'Discount price ({VALUE}) should be below regular price',
+      },
+    },
     summary: {
       type: String,
       trim: true,
