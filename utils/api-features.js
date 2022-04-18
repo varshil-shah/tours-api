@@ -11,7 +11,7 @@ class APIFeatures {
 
     let queryString = JSON.stringify(queryObjects);
     queryString = queryString.replace(
-      /\b(gte|gt|lte|lt)\b/g,
+      /\b(gte|gt|lte|lt|eq)\b/g,
       (match) => `$${match}`
     );
 
@@ -34,7 +34,7 @@ class APIFeatures {
       const fields = this.queryString.fields.split(',').join(' ');
       this.query = this.query.select(fields);
     } else {
-      this.query = this.query.select('-__v');
+      this.query = this.query.select('-__v -_id');
     }
     return this;
   }
