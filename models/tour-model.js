@@ -119,6 +119,7 @@ tourSchema.pre(/^find/, function (next) {
 // QUERY MIDDLEWARE - runs after .find()
 tourSchema.post(/^find/, function (doc, next) {
   const time = Date.now() - this.start;
+  // eslint-disable-next-line no-console
   console.log(`TIME TOOK TO EXECUTE QUERY: ${time} milliseconds`);
   next();
 });

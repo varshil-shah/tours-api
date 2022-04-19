@@ -1,5 +1,12 @@
+/* eslint-disable no-console */
 const mongoose = require('mongoose');
 const dotevn = require('dotenv');
+
+process.on('uncaughtException', (error) => {
+  console.log(`UNCAUGHT EXCEPTION | SHUTTING DOWN ...`);
+  console.log(error.name, error.message);
+  process.exit(1);
+});
 
 dotevn.config({
   path: './config.env',
@@ -27,8 +34,8 @@ const server = app.listen(PORT, () => {
 });
 
 process.on('unhandledRejection', (error) => {
-  console.log(`ERRROR: ${error.name} | ERRROR MSG: ${error.message}`);
   console.log(`UNHANDLED REJECTION | SHUTTING DOWN ...`);
+  console.log(error.name, error.message);
   server.close(() => {
     process.exit(1);
   });
