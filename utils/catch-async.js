@@ -1,0 +1,8 @@
+// eslint-disable-next-line arrow-body-style
+const catchAsync = (func) => {
+  return (req, res, next) => {
+    func(req, res, next).catch((error) => next(error));
+  };
+};
+
+module.exports = catchAsync;
