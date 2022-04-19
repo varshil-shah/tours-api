@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const argon2 = require('argon2');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -49,7 +50,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please confirm your password'],
     trim: true,
+    validate: {
+      // THIS ONLY WORKS ON CREATE or SAVE!!
+      validator: function (value) {
+        return value === this.password;
+      },
+      message: 'Passwords are not matching!!',
+    },
   },
+});
+
+userSchema.pre('save', async function (next) {
+  // Only run this function if password is actually modified
+  if (!this.isModified('password')) return next();
+
+  // Hash the password
+  this.password = await argon2.hash(this.password, { saltLength: 12 });
+
+  // remove passwordConfirm
+  this.passwordConfirm = undefined;
+  next();
 });
 
 const User = mongoose.model('User', userSchema);
