@@ -65,7 +65,7 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   // Hash the password
-  this.password = await argon2.hash(this.password, { saltLength: 12 });
+  this.password = await argon2.hash(this.password, { saltLength: 20 });
 
   // remove passwordConfirm
   this.passwordConfirm = undefined;
