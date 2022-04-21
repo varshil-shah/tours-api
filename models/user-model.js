@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     minlength: 8,
     required: [true, 'Please provde a password'],
+    select: false,
     validate: {
       validator: function (value) {
         return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
@@ -59,6 +60,10 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
+
+userSchema.methods.verifyPassword = async function (password, hashPassword) {
+  return await argon2.verify(hashPassword, password);
+};
 
 userSchema.pre('save', async function (next) {
   // Only run this function if password is actually modified
