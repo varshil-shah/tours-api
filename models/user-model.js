@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const argon2 = require('argon2');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -67,6 +68,8 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: {
     type: Date,
   },
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
 
 userSchema.methods.verifyPassword = async function (password, hashPassword) {
@@ -82,6 +85,17 @@ userSchema.methods.ChangedPasswordAfter = function (JWTTimestamp) {
     return JWTTimestamp < changedTimestamp;
   }
   return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha512')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  console.log({ resetToken }, this.passwordResetToken);
+  return resetToken;
 };
 
 userSchema.pre('save', async function (next) {
