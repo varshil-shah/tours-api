@@ -141,15 +141,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res) => {
       },
     },
     {
-      $project: {
-        _id: 0,
-      },
-    },
-    {
       $sort: { numberofTourStarts: -1 },
-    },
-    {
-      $limit: 12,
     },
   ]);
 
