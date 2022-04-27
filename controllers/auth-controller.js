@@ -12,6 +12,18 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
   const user = await User.create({
     name: req.body.name,
@@ -23,15 +35,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     role: req.body.role,
   });
 
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
+  createSendToken(user, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -51,13 +55,7 @@ exports.login = catchAsync(async (req, res, next) => {
     );
   }
 
-  const token = signToken(user._id);
-
-  // If everything is ok, send token to the client
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -181,10 +179,35 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // 3) Update the changedPasswordAt property of the user
   // 4) Log the user in and send JWT
-  const token = signToken(user._id);
+  createSendToken(user, 200, res);
+});
 
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // check if currentPassword, password and confirmPassword are present
+  const { passwordCurrent, password, passwordConfirm } = req.body;
+  if (!passwordCurrent || !password || !passwordConfirm) {
+    return next(
+      new AppError(
+        'Please provide current password, password and confirm password to proceed!',
+        401
+      )
+    );
+  }
+
+  // get user from the collection
+  const user = await User.findById({ _id: req.user.id }).select('+password');
+
+  // check if the POSTed password is correct
+  if (!(await user.verifyPassword(passwordCurrent, user.password))) {
+    return next(new AppError(`Your current password is incorrect!`, 401));
+  }
+
+  // If so, update the password
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+  // User.findByIdAndUpdate() will not work as intended!
+
+  // Log user in, send JWT
+  createSendToken(user, 200, res);
 });
