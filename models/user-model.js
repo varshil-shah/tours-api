@@ -72,6 +72,12 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
+userSchema.pre('save', function (next) {
+  if (this.isModified('password') || this.isNew) return next();
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 userSchema.methods.verifyPassword = async function (password, hashPassword) {
   return await argon2.verify(hashPassword, password);
 };
@@ -94,7 +100,6 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest('hex');
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-  console.log({ resetToken }, this.passwordResetToken);
   return resetToken;
 };
 
