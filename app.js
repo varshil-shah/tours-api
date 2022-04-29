@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const rateLimiter = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -26,6 +28,12 @@ app.use('/api', limiter);
 // body parser, reading data from body into req.body
 // limiting amount of data comes in the body
 app.use(express.json({ limit: '10kb' }));
+
+// data sanitization again NOSQL query injection
+app.use(mongoSanitize());
+
+// data sanitization again cross-site scripting attacks (XSS)
+app.use(xss());
 
 // development logging
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
