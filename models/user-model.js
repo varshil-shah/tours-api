@@ -82,7 +82,7 @@ userSchema.methods.verifyPassword = async function (password, hashPassword) {
   return await argon2.verify(hashPassword, password);
 };
 
-userSchema.methods.ChangedPasswordAfter = function (JWTTimestamp) {
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
