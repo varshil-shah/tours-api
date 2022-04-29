@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimiter = require('express-rate-limit');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -8,6 +9,14 @@ const tourRouter = require('./routes/tour-router');
 const userRouter = require('./routes/user-router');
 
 const app = express();
+
+const limiter = rateLimiter({
+  windowMs: 60 * 60 * 1000, // 1hr
+  max: 100,
+  message: 'Too many requests from this IP, please try again after an hour',
+});
+
+app.use('/api', limiter);
 
 // 3rd party middleware -
 app.use(express.json());
