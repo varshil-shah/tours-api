@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const rateLimiter = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -15,6 +16,20 @@ const app = express();
 
 // set security http headers
 app.use(helmet());
+
+// prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsAverage',
+      'ratingsQuantity',
+      'price',
+      'difficulty',
+      'maxGroupSize',
+    ],
+  })
+);
 
 // limit request from same API
 const limiter = rateLimiter({
