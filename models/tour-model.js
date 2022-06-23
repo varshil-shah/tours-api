@@ -140,6 +140,15 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+// QUERY MIDDLEWARE - run before .find() to populate data
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+  next();
+});
+
 // QUERY MIDDLEWARE - runs after .find()
 tourSchema.post(/^find/, function (doc, next) {
   const time = Date.now() - this.start;
