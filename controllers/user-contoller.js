@@ -5,7 +5,7 @@ const AppError = require('../utils/app-error');
 const filterObject = (object, ...allowedFields) => {
   const newObject = {};
   Object.keys(object).forEach((element) => {
-    if (allowedFields.includes(element)) {
+    if (!allowedFields.includes(element)) {
       newObject[element] = object[element];
     }
   });
@@ -65,6 +65,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   // filtered out unwanted field names that are not allowed to be updated
   const filteredBody = filterObject(req.body, 'name', 'email');
+  console.log(filteredBody);
 
   // update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
