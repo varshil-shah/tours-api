@@ -8,6 +8,7 @@ const reviewController = require('../controllers/review-controller');
 router.route('/:id').get(authController.protect, reviewController.getReview);
 
 // POST tours/dh4hfn4w3jv/reviews
+// GET tours/dh4hfn4w3jv/reviews
 // POST /reviews
 
 router

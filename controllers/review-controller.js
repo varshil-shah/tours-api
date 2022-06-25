@@ -4,7 +4,10 @@ const AppError = require('../utils/app-error');
 const Tour = require('../models/tour-model');
 
 exports.getAllReviews = catchAsync(async (req, res) => {
-  const reviews = await Review.find();
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId };
+
+  const reviews = await Review.find(filter);
 
   res.status(200).json({
     status: 'success',
