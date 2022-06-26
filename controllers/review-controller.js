@@ -39,17 +39,14 @@ exports.createReview = catchAsync(async (req, res, next) => {
     return next(new AppError('No tour found with that Id', 404));
   }
 
-  const review = await Review.create({
-    review: req.body.review,
-    rating: req.body.rating,
-    tour: req.body.tour,
-    user: req.body.user,
-  });
+  const review = await Review.create(req.body);
 
   res.status(201).json({
     status: 'success',
     data: { review },
   });
 });
+
+exports.updateReview = factory.updateOne(Review);
 
 exports.deleteReview = factory.deleteOne(Review);
