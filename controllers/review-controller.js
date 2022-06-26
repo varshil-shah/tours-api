@@ -1,7 +1,6 @@
 const Review = require('../models/review-model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
-const Tour = require('../models/tour-model');
 const factory = require('./factory-controller');
 
 exports.getAllReviews = catchAsync(async (req, res) => {
@@ -29,23 +28,13 @@ exports.getReview = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createReview = catchAsync(async (req, res, next) => {
-  // allow nested routes
+exports.setTourUserIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId;
   if (!req.body.user) req.body.user = req.user.id;
+  next();
+};
 
-  const tour = await Tour.findById(req.body.tour);
-  if (!tour) {
-    return next(new AppError('No tour found with that Id', 404));
-  }
-
-  const review = await Review.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: { review },
-  });
-});
+exports.createReview = factory.createOne(Review);
 
 exports.updateReview = factory.updateOne(Review);
 
