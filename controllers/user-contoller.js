@@ -1,6 +1,7 @@
 const User = require('../models/user-model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
+const factory = require('./factory-controller');
 
 const filterObject = (object, ...allowedFields) => {
   const newObject = {};
@@ -45,12 +46,7 @@ exports.updateUser = (req, res) => {
   });
 };
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!',
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // If req.body contains password or passwordConfirm, send error
@@ -65,7 +61,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   // filtered out unwanted field names that are not allowed to be updated
   const filteredBody = filterObject(req.body, 'name', 'email');
-  console.log(filteredBody);
 
   // update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
