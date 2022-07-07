@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const argon2 = require('argon2');
+const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
@@ -84,7 +84,7 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.methods.verifyPassword = async function (password, hashPassword) {
-  return await argon2.verify(hashPassword, password);
+  return await bcrypt.compare(hashPassword, password);
 };
 
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
@@ -113,7 +113,7 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   // Hash the password
-  this.password = await argon2.hash(this.password, { saltLength: 20 });
+  this.password = await bcrypt.hash(this.password, 10);
 
   // remove passwordConfirm
   this.passwordConfirm = undefined;
