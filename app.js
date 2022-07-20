@@ -15,7 +15,7 @@ const reviewRouter = require('./routes/review-router');
 
 const app = express();
 
-// set security http headers
+// set secure http headers
 app.use(helmet());
 
 // prevent parameter pollution
