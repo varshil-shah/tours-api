@@ -5,6 +5,7 @@ const rateLimiter = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -14,6 +15,13 @@ const userRouter = require('./routes/user-router');
 const reviewRouter = require('./routes/review-router');
 
 const app = express();
+
+// serving views
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+
+// serving static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // set secure http headers
 app.use(helmet());
@@ -54,13 +62,15 @@ app.use(xss());
 // development logging
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
-// serving static files
-app.use(express.static('public'));
-
 // test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
+});
+
+// ROUTES
+app.get('/', (req, res) => {
+  res.status(200).render('base');
 });
 
 app.use('/api/v1/tours', tourRouter);
