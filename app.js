@@ -13,6 +13,7 @@ const globalErrorHandler = require('./controllers/error-controller');
 const tourRouter = require('./routes/tour-router');
 const userRouter = require('./routes/user-router');
 const reviewRouter = require('./routes/review-router');
+const viewRouter = require('./routes/view-router');
 
 const app = express();
 
@@ -69,13 +70,8 @@ app.use((req, res, next) => {
 });
 
 // ROUTES
-app.get('/', (req, res) => {
-  res.status(200).render('base', {
-    tour: 'The Forest Hikers',
-    user: 'Varshil Shah',
-  });
-});
 
+app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
