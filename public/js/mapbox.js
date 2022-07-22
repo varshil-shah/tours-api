@@ -1,6 +1,6 @@
 /* eslint-disable */
-console.log('Hello from client side :D');
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
+
 const mapboxKey = document.getElementById('key').dataset.apikey;
 
 mapboxgl.accessToken = mapboxKey;
@@ -45,3 +45,5 @@ map.fitBounds(bounds, {
     right: 100,
   },
 });
+
+console.log('Map');
