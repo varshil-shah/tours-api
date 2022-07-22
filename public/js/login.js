@@ -1,7 +1,5 @@
 /* eslint-disable */
 const login = async (email, password) => {
-  console.log({ email, password });
-
   try {
     const response = await axios({
       method: 'POST',
@@ -11,9 +9,16 @@ const login = async (email, password) => {
         password,
       },
     });
+
+    if (response.data.status === 'success') {
+      alert('Logged in successfully');
+      setTimeout(() => {
+        location.assign('/');
+      }, 1500);
+    }
     console.log(response);
   } catch (error) {
-    console.log(error.response.data);
+    alert(error.response.data.message);
   }
 };
 
