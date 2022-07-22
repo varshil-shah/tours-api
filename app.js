@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -51,6 +52,9 @@ const limiter = rateLimiter({
 
 app.use('/api', limiter);
 
+// cookie parser
+app.use(cookieParser());
+
 // body parser, reading data from body into req.body
 // limiting amount of data comes in the body
 app.use(express.json({ limit: '10kb' }));
@@ -67,6 +71,7 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.cookies);
   next();
 });
 
