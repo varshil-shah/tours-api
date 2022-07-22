@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const rateLimiter = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -25,7 +25,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // set secure http headers
-app.use(helmet());
+// app.use(helmet());
+// app.use(helmet.contentSecurityPolicy());
 
 // prevent parameter pollution
 app.use(
