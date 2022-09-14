@@ -71,7 +71,6 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.cookies);
   next();
 });
 

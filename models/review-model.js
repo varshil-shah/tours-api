@@ -69,14 +69,10 @@ reviewSchema.statics.calculateAverageRatings = async function (tourId) {
       ratingsQuantity: 0,
     });
   }
-  console.log(
-    `RatingsAverage: ${stats[0].avgRating} | RatingsQuantity: ${stats[0].nRating}`
-  );
 };
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
-  console.log(this.r);
   next();
 });
 
