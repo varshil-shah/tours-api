@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { showAlert } from './alerts';
 
 export const login = async (email, password) => {
   try {
@@ -12,12 +13,12 @@ export const login = async (email, password) => {
     });
 
     if (response.data.status === 'success') {
-      alert('Logged in successfully');
+      showAlert('success', 'Logged in successfully');
       setTimeout(() => {
         location.assign('/');
       }, 1500);
     }
   } catch (error) {
-    alert(error.response.data.message);
+    showAlert('error', error.response.data.message);
   }
 };
