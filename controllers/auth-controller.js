@@ -122,6 +122,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
+  res.locals.user = currentUser;
   req.user = currentUser;
   next();
 });
