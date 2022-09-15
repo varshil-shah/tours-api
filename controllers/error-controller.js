@@ -27,34 +27,56 @@ const handleJWTError = (error) =>
 const handleTokenExpiredError = (error) =>
   new AppError(`Your token has been expired! please log in again`, 401);
 
-const sendErrorDevelopment = (error, res) => {
-  res.status(error.statusCode).json({
-    status: error.status,
-    message: error.message,
-    stack: error.stack,
-    error: error,
+const sendErrorDevelopment = (error, req, res) => {
+  // API
+  if (req.originalUrl.startsWith('/api')) {
+    return res.status(error.statusCode).json({
+      status: error.status,
+      message: error.message,
+      stack: error.stack,
+      error: error,
+    });
+  }
+
+  // RENDERED WEBSITE
+  return res.status(error.statusCode).render('error', {
+    title: 'Something went wrong!',
+    msg: error.message,
   });
 };
 
-const sendErrorProduction = (error, res) => {
-  // OPERATIONAL, TRUSTED ERRROR - SEND MESSAGE TO CLIENT
-  if (error.isOperational) {
-    res.status(error.statusCode).json({
-      status: error.status,
-      message: error.message,
-    });
+const sendErrorProduction = (error, req, res) => {
+  if (req.originalUrl.startsWith('/api')) {
+    // OPERATIONAL, TRUSTED ERRROR - SEND MESSAGE TO CLIENT
+    if (error.isOperational) {
+      return res.status(error.statusCode).json({
+        status: error.status,
+        message: error.message,
+      });
 
-    // PROGRAMMING ERRROR OR OTHER UNKNOWN ERRROR - DON'T LEAK
-  } else {
+      // PROGRAMMING ERRROR OR OTHER UNKNOWN ERRROR - DON'T LEAK
+    }
+
     // eslint-disable-next-line no-console
     console.error(`ERRROR 💣 ${error}`);
-
     // SEND GENERIC RESPONSE
-    res.status(500).json({
+    return res.status(500).json({
       status: 'error',
       message: 'Something went very wrong :(',
     });
   }
+
+  if (error.isOperational) {
+    return res.status(error.statusCode).render('error', {
+      title: 'Something went very wrong!',
+      msg: error.message,
+    });
+  }
+
+  return res.status(500).render('error', {
+    title: 'Something went very wrong!',
+    msg: 'Please try again later.',
+  });
 };
 
 module.exports = (error, req, res, next) => {
@@ -62,10 +84,11 @@ module.exports = (error, req, res, next) => {
   error.status = error.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    sendErrorDevelopment(error, res);
+    sendErrorDevelopment(error, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     let err = { ...error };
     err.name = error.name;
+    err.message = error.message;
 
     if (err.code === 11000) err = handleDuplicateFieldsDB(err);
 
@@ -82,11 +105,9 @@ module.exports = (error, req, res, next) => {
       case 'JsonWebTokenError':
         err = handleJWTError(err);
         break;
-      default:
-        sendErrorProduction(err, res);
     }
 
-    sendErrorProduction(err, res);
+    sendErrorProduction(err, req, res);
   }
   next();
 };
