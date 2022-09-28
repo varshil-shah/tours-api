@@ -1,7 +1,35 @@
+const multer = require('multer');
+const fs = require('fs');
+
 const User = require('../models/user-model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
 const factory = require('./factory-controller');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, 'public/img/users');
+  },
+  filename: (req, file, callback) => {
+    const ext = file.mimetype.split('/')[1];
+    callback(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+
+const multerFilter = (req, file, callback) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(new AppError('Please provide a valid image!', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadUserPhoto = upload.single('photo');
 
 const filterObject = (object, ...allowedFields) => {
   const newObject = {};
@@ -46,6 +74,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   // filtered out unwanted field names that are not allowed to be updated
   const filteredBody = filterObject(req.body, 'name', 'email');
+
+  // Check if the user has uploaded the image
+  if (req.file) {
+    filteredBody.photo = req.file.filename;
+
+    // Get old image name and delete it
+    const user = await User.findById(req.user.id);
+    fs.unlinkSync(`public/img/users/${user.photo}`);
+  }
 
   // update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
