@@ -1,7 +1,74 @@
+const multer = require('multer');
+const sharp = require('sharp');
+const fs = require('fs');
+
 const Tour = require('../models/tour-model');
 const catchAsync = require('../utils/catch-async');
 const factory = require('./factory-controller');
 const AppError = require('../utils/app-error');
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, callback) => {
+  if (file.mimetype.startsWith('image')) {
+    callback(null, true);
+  } else {
+    callback(new AppError('Please provide a valid image!', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+/*
+upload.single('image') -> req.file (for single image)
+upload.array('images', 5) -> req.files (for multiple images)
+*/
+
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  if (!req.files.imageCover || !req.files.images) return next();
+
+  req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  req.body.images = [];
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      console.log({ file });
+      const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${filename}`);
+      req.body.images.push(filename);
+    })
+  );
+
+  // Remove old images
+  const tour = await Tour.findById(req.params.id);
+  const listOfOldImages = [tour.imageCover, ...tour.images];
+
+  listOfOldImages.forEach((filename) => {
+    const filepath = `public/img/tours/${filename}`;
+    if (fs.existsSync(filepath)) {
+      fs.unlinkSync(filepath);
+    }
+  });
+
+  next();
+});
 
 exports.aliasTopTour = (req, res, next) => {
   req.query.limit = '5';
