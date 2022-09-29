@@ -99,7 +99,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     // Get old image name and delete it
     const user = await User.findById(req.user.id);
     const oldImagePath = `public/img/users/${user.photo}`;
-    if (fs.existsSync(oldImagePath)) fs.unlinkSync();
+    if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
   }
 
   // update user document
