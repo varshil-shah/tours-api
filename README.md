@@ -20,3 +20,17 @@ This folder contains routes that will allow you to get all tours, get a specific
 | Create Tour                   | POST     | /api/v1/tours                                                     |
 | Update Tour                   | PATCH    | /api/v1/tours/{id}                                                |
 | Delete Tour                   | DELETE   | /api/v1/tours/{id}                                                |
+
+### User
+
+Users need to sign up in order to purchase tours. This folder will allow you to manage all operations related to users
+
+| **Name**            | **Type** | **Endpoint**            |
+| ------------------- | -------- | ----------------------- |
+| Get all Users       | GET      | /api/v1/users           |
+| Get User            | GET      | /api/v1/users/{id}      |
+| Get Current User    | GET      | /api/v1/users/me        |
+| Update User         | PATCH    | /api/v1/users/{id}      |
+| Update Current User | PATCH    | /api/v1/users/update-me |
+| Delete Current User | PATCH    | /api/v1/users/delete-me |
+| Delete User         | DELETE   | /api/v1/users/{id}      |
