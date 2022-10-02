@@ -34,3 +34,27 @@ Users need to sign up in order to purchase tours. This folder will allow you to 
 | Update Current User | PATCH    | /api/v1/users/update-me |
 | Delete Current User | PATCH    | /api/v1/users/delete-me |
 | Delete User         | DELETE   | /api/v1/users/{id}      |
+
+### Authentication
+
+Sign up providing your name, email, and password. You can set your profile picture later. The email must be unique (never used to create an account before).
+
+| **Name**                     | **Type** | **Endpoint**                         |
+| ---------------------------- | -------- | ------------------------------------ |
+| Sign Up                      | POST     | /api/v1/users/signup                 |
+| Login                        | POST     | /api/v1/users/login                  |
+| Forgot Password              | POST     | /api/v1/users/forgot-password        |
+| Reset Password               | PATCH    | /api/v1/users/reset-password/{token} |
+| Update Current User Password | PATCH    | /api/v1/users/update-my-password     |
+
+### Reviews
+
+Users, who have created an account or are currently logged in can perform CURD operation on Review collection.
+
+| **Name**          | **Type** | **Endpoint**         |
+| ----------------- | -------- | -------------------- |
+| Get all Reviews   | GET      | /api/v1/reviews      |
+| Get Review        | GET      | /api/v1/reviews/{id} |
+| Create New Review | POST     | /api/v1/reviews      |
+| Update Review     | PATCH    | /api/v1/reviews/{id} |
+| Delete Review     | DELELTE  | /api/v1/reviews/{id} |
