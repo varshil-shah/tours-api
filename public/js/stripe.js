@@ -6,9 +6,7 @@ import { showAlert } from './alerts';
 export const bookTour = async (tourId) => {
   try {
     // Get checkout session from API
-    const session = await axios(
-      `http://localhost:3000/api/v1/bookings/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
 
     // Create checkout form and charge from credit card
     await stripe.redirectToCheckout({
