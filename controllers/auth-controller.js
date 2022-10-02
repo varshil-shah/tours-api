@@ -44,9 +44,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     photo: req.body.photo,
     passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role,
-    active: req.body.active,
   });
 
   const url = `${req.protocol}://${req.get('host')}/me`;
