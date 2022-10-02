@@ -7,6 +7,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -42,6 +43,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression());
 
 // limit request from same API
 const limiter = rateLimiter({
