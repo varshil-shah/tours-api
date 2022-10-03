@@ -24,6 +24,8 @@ This folder contains routes that will allow you to get all tours, get a specific
 ### User
 
 Users need to sign up in order to purchase tours. This folder will allow you to manage all operations related to users
+#### Endpoints for User
+
 
 | **Name**            | **Type** | **Endpoint**            |
 | ------------------- | -------- | ----------------------- |
@@ -38,6 +40,8 @@ Users need to sign up in order to purchase tours. This folder will allow you to 
 ### Authentication
 
 Sign up providing your name, email, and password. You can set your profile picture later. The email must be unique (never used to create an account before).
+#### Endpoints for Authentication
+
 
 | **Name**                     | **Type** | **Endpoint**                         |
 | ---------------------------- | -------- | ------------------------------------ |
@@ -47,9 +51,11 @@ Sign up providing your name, email, and password. You can set your profile pictu
 | Reset Password               | PATCH    | /api/v1/users/reset-password/{token} |
 | Update Current User Password | PATCH    | /api/v1/users/update-my-password     |
 
-### Reviews
+### Review
 
 Users, who have created an account or are currently logged in can perform CURD operation on Review collection.
+#### Endpoints for Review
+
 
 | **Name**          | **Type** | **Endpoint**         |
 | ----------------- | -------- | -------------------- |
@@ -57,4 +63,28 @@ Users, who have created an account or are currently logged in can perform CURD o
 | Get Review        | GET      | /api/v1/reviews/{id} |
 | Create New Review | POST     | /api/v1/reviews      |
 | Update Review     | PATCH    | /api/v1/reviews/{id} |
-| Delete Review     | DELELTE  | /api/v1/reviews/{id} |
+| Delete Review     | DELETE  | /api/v1/reviews/{id} |
+
+### Reviews on Tour
+
+On this endpoints, a user can create and get all reviews on a specific tour.
+
+#### Endpoints for Reviews on Tour
+
+| **Name** | **Type** | **Endpoint** |
+| --- | --- | --- |
+| Create Review on Tour | POST | /api/v1/tours/{TourId}/reviews |
+| Get Review on Tour | GET | /api/v1/tours/{TourId}/reviews |
+
+### Bookings
+
+A new booking is generated every time someone books a tour and it contains information about the purchase. Only admins and lead-guides have access to this data.
+
+#### Endpoints for bookings
+
+| **Name** | **Type** | **Endpoint** |
+| --- | --- | --- |
+| Get all Bookings | GET | /api/v1/bookings |
+| Get Booking | GET | /api/v1/bookings/{id} |
+
+
