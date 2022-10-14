@@ -2,6 +2,8 @@
 
 Natours API provides all the data related to tours and travel. This API contains endpoints for Tours, Users, Reviews and Bookings for a fictional tours company called Natours.
 
+The API is been hosted here [varshil-shah-natours-api](https://varshil-shah-natours-api.cyclic.app/). The complete documentation of an API is available here [Postman Natours API Documentation]() Feel free to test and do ping me if you find any issues.
+
 ### Tours
 
 This folder contains routes that will allow you to get all tours, get a specific one, delete a tour, create your own (if your user role is admin or lead-guide), update a tour, get its stats and even geospatial data like getting a tour within a specified radius and the distances of all tours from a specific point.

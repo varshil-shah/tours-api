@@ -8,6 +8,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error-controller');
@@ -29,6 +30,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // set secure http headers
 // app.use(helmet());
+
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin *
+// backend(api.website.com) frontend(website.com)
+// app.use(
+//   cors({
+//     origin: 'https://website.com',
+//   })
+// );
+
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
 
 // prevent parameter pollution
 app.use(
