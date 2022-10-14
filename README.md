@@ -2,7 +2,12 @@
 
 Natours API provides all the data related to tours and travel. This API contains endpoints for Tours, Users, Reviews and Bookings for a fictional tours company called Natours.
 
-The API is been hosted here [varshil-shah-natours-api](https://varshil-shah-natours-api.cyclic.app/). The complete documentation of an API is available here [Postman Natours API Documentation]() Feel free to test and do ping me if you find any issues.
+The API is been hosted here -
+
+1. [varshil-shah-natours-api-on-railway](https://natours-api.up.railway.app/)
+2. [varshil-shah-natours-api-on-cyclic](https://varshil-shah-natours-api.cyclic.app/)
+
+The complete documentation of an API is available here [Postman Natours API Documentation]() Feel free to test and do ping me if you find any issues.
 
 ### Tours
 
@@ -26,8 +31,8 @@ This folder contains routes that will allow you to get all tours, get a specific
 ### User
 
 Users need to sign up in order to purchase tours. This folder will allow you to manage all operations related to users
-#### Endpoints for User
 
+#### Endpoints for User
 
 | **Name**            | **Type** | **Endpoint**            |
 | ------------------- | -------- | ----------------------- |
@@ -42,8 +47,8 @@ Users need to sign up in order to purchase tours. This folder will allow you to 
 ### Authentication
 
 Sign up providing your name, email, and password. You can set your profile picture later. The email must be unique (never used to create an account before).
-#### Endpoints for Authentication
 
+#### Endpoints for Authentication
 
 | **Name**                     | **Type** | **Endpoint**                         |
 | ---------------------------- | -------- | ------------------------------------ |
@@ -56,8 +61,8 @@ Sign up providing your name, email, and password. You can set your profile pictu
 ### Review
 
 Users, who have created an account or are currently logged in can perform CURD operation on Review collection.
-#### Endpoints for Review
 
+#### Endpoints for Review
 
 | **Name**          | **Type** | **Endpoint**         |
 | ----------------- | -------- | -------------------- |
@@ -65,7 +70,7 @@ Users, who have created an account or are currently logged in can perform CURD o
 | Get Review        | GET      | /api/v1/reviews/{id} |
 | Create New Review | POST     | /api/v1/reviews      |
 | Update Review     | PATCH    | /api/v1/reviews/{id} |
-| Delete Review     | DELETE  | /api/v1/reviews/{id} |
+| Delete Review     | DELETE   | /api/v1/reviews/{id} |
 
 ### Reviews on Tour
 
@@ -73,10 +78,10 @@ On this endpoints, a user can create and get all reviews on a specific tour.
 
 #### Endpoints for Reviews on Tour
 
-| **Name** | **Type** | **Endpoint** |
-| --- | --- | --- |
-| Create Review on Tour | POST | /api/v1/tours/{TourId}/reviews |
-| Get Review on Tour | GET | /api/v1/tours/{TourId}/reviews |
+| **Name**              | **Type** | **Endpoint**                   |
+| --------------------- | -------- | ------------------------------ |
+| Create Review on Tour | POST     | /api/v1/tours/{TourId}/reviews |
+| Get Review on Tour    | GET      | /api/v1/tours/{TourId}/reviews |
 
 ### Bookings
 
@@ -84,9 +89,7 @@ A new booking is generated every time someone books a tour and it contains infor
 
 #### Endpoints for bookings
 
-| **Name** | **Type** | **Endpoint** |
-| --- | --- | --- |
-| Get all Bookings | GET | /api/v1/bookings |
-| Get Booking | GET | /api/v1/bookings/{id} |
-
-
+| **Name**         | **Type** | **Endpoint**          |
+| ---------------- | -------- | --------------------- |
+| Get all Bookings | GET      | /api/v1/bookings      |
+| Get Booking      | GET      | /api/v1/bookings/{id} |
