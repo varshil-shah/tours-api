@@ -19,6 +19,8 @@ const reviewRouter = require('./routes/review-router');
 const viewRouter = require('./routes/view-router');
 const bookingRouter = require('./routes/booking-router');
 
+const bookingController = require('./controllers/booking-controller');
+
 const app = express();
 
 // serving views
@@ -68,6 +70,13 @@ const limiter = rateLimiter({
 });
 
 app.use('/api', limiter);
+
+// Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // cookie parser
 app.use(cookieParser());
