@@ -57,6 +57,7 @@ const createBookingCheckout = async (session) => {
   const user = (await User.findOne({ email: session.customer_email })).id;
   const price = session.display_items[0].amount / 100;
   await Booking.create({ tour, user, price });
+  console.log('Tour created & saved!');
 };
 
 exports.webhookCheckout = (req, res, next) => {
@@ -73,8 +74,12 @@ exports.webhookCheckout = (req, res, next) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.completed')
+  console.log(event);
+
+  if (event.type === 'checkout.session.completed') {
+    console.log('EVENT: WEBHOOK.SESSION.COMPLETED');
     createBookingCheckout(event.data.object);
+  }
 
   res.status(200).json({ received: true });
 };
