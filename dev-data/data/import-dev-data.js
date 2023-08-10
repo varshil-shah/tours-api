@@ -7,7 +7,7 @@ const User = require('../../models/user-model');
 const Review = require('../../models/review-model');
 
 dotevn.config({
-  path: './config.env',
+  path: '../../config.env',
 });
 
 const database = process.env.DATABASE.replace(
@@ -24,8 +24,12 @@ mongoose
   })
   .then(() => console.log(`Database connected successfully!`));
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
-const users = JSON.parse(fs.readFileSync(`${__dirname}/users.json`, 'utf-8'));
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/tours-imagekit.json`, 'utf-8')
+);
+const users = JSON.parse(
+  fs.readFileSync(`${__dirname}/users-imagekit.json`, 'utf-8')
+);
 const reviews = JSON.parse(
   fs.readFileSync(`${__dirname}/reviews.json`, 'utf-8')
 );
@@ -33,9 +37,9 @@ const reviews = JSON.parse(
 // IMPORT DATA AND STORE IN DATABASE -
 const importData = async () => {
   try {
-    await Tour.create(tours);
+    // await Tour.create(tours);
     await User.create(users, { validateBeforeSave: false });
-    await Review.create(reviews);
+    // await Review.create(reviews);
     console.log(`Data successfully loaded!`);
   } catch (error) {
     console.log(error);

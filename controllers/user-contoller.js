@@ -6,6 +6,7 @@ const User = require('../models/user-model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
 const factory = require('./factory-controller');
+const imageKit = require('../utils/image-kit');
 
 // const multerStorage = multer.diskStorage({
 //   destination: (req, file, callback) => {
@@ -37,13 +38,24 @@ exports.uploadUserPhoto = upload.single('photo');
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  // req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  const filename = `user-${req.user.id}}.jpeg`;
 
-  await sharp(req.file.buffer)
+  const imageBuffer = await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    .jpeg({ quality: 90 });
+  // .toFile(`public/img/users/${req.file.filename}`);
+
+  // Upload image to imagekit
+  const uploadResponse = await imageKit.upload({
+    file: imageBuffer,
+    fileName: filename,
+    folder: 'users',
+  });
+
+  console.log(uploadResponse);
+  req.file.filename = uploadResponse.url;
 
   next();
 });
@@ -98,8 +110,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
     // Get old image name and delete it
     const user = await User.findById(req.user.id);
-    const oldImagePath = `public/img/users/${user.photo}`;
-    if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
+    // const oldImagePath = `public/img/users/${user.photo}`;
+    // if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
   }
 
   // update user document
