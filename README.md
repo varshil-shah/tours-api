@@ -1,32 +1,61 @@
-## Natours API
+![Natours-Logo](public/img/logo-green.png)
 
-Natours API provides all the data related to tours and travel. This API contains endpoints for Tours, Users, Reviews and Bookings for a fictional tours company called Natours.
+# Natours Tours API
 
-The API is been hosted here -
+Tours API is a RESTful API that allows users to view all available tours, book tours using Stripe payment gateway, rate tours after completion, filter tours based on their needs, and see all reviews based on tours. It also supports many more features, such as creating and managing user accounts, adding and editing tours, and managing reviews.
 
-1. [varshil-shah-natours-api-on-railway](https://natours-api.up.railway.app/)
-2. [varshil-shah-natours-api-on-cyclic](https://varshil-shah-natours-api.cyclic.app/)
+The APIs are hosted at -
+
+- [render](https://varshil-shah-tours-api.onrender.com)
+- [cyclic](https://varshil-shah-natours-api.cyclic.app)
+
+Sites will take little time to load, as of now they are been hosted on free servers.
 
 The complete documentation of an API is available here [Postman Natours API Documentation]() Feel free to test and do ping me if you find any issues.
 
-### Tours
+## User credentials
 
-This folder contains routes that will allow you to get all tours, get a specific one, delete a tour, create your own (if your user role is admin or lead-guide), update a tour, get its stats and even geospatial data like getting a tour within a specified radius and the distances of all tours from a specific point.
+email: `john@doe.com`
 
-#### Endpoints for Tour
+password: `Test@1234`
 
-| **Name**                      | **Type** | **Endpoint**                                                      |
-| ----------------------------- | -------- | ----------------------------------------------------------------- |
-| Get all Tours                 | GET      | /api/v1/tours                                                     |
-| Get Tour                      | GET      | /api/v1/tours/{id}                                                |
-| Top 5 Cheap                   | GET      | /api/v1/tours/top-5-cheap/                                        |
-| Tour Stats                    | GET      | /api/v1/tours/stats                                               |
-| Monthly Plan                  | GET      | /api/v1/tours/monthly-plan/{year}                                 |
-| Get Tour Within Radius        | GET      | /api/v1/tours/tours-within/{distance}/center/{latlng}/unit/{unit} |
-| Get Distance From Coordinates | GET      | /api/v1/tours/distances/{latlng}/unit/{unit}                      |
-| Create Tour                   | POST     | /api/v1/tours                                                     |
-| Update Tour                   | PATCH    | /api/v1/tours/{id}                                                |
-| Delete Tour                   | DELETE   | /api/v1/tours/{id}                                                |
+## Tours
+
+Our versatile routes empower you to seamlessly manage tours. Whether you're retrieving all tours, specific ones, or exploring geospatial data within a radius, we've got you covered. Admins and lead guides can create and update tours, while everyone can access tour stats.
+
+### Tour Endpoints -
+
+#### Get all tours
+
+Endpoint: `/api/v1/tours`
+
+Description: Get all the tours.
+
+Parameters:
+
+- `sort` (`string`, example: `-price,ratingsAverage`)
+  - Allows user to sort tours in ascending and descending order. Use (-) to sort in descending order.
+- `page` (`number`, `default=1`)
+  - Allows user to access certain page of an API.
+- `limit` (`number`, `default=10`)
+  - Limits the number of results.
+- `duration[gte]` (`number`, example: `5`)
+  - Allows user to filter tours based on duration. On numbers, you can use (gte - greater than or equal to, lte - less than or equal, gt - greater than and lt - less than) to filter data.
+- `price[lt]` (`number`, example: `1500`)
+  - Allows user to filter tours based on price. On numbers, you can use (gte - greater than or equal to, lte - less than or equal, gt - greater than and lt - less than) to filter data.
+- `fields` (`string`, example: `name,price,difficulty,duration`)
+  - Allows user to projects certain fields from the incoming data.
+- `difficulty` (`string`, types: `easy, medium, difficulty`)
+  - Filters data based on difficulty level (easy, medium and difficult).
+
+Response:
+
+- status (`string`)
+  - The status of the request. Possible values are `success, fail and error`.
+- results (`number`)
+  - Total number of results available.
+- data (`object`)
+  - Response from the server.
 
 ### User
 
