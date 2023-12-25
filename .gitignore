@@ -3,3 +3,4 @@ config.env
 .idea/
 .cache/
 .fleet/
+logs.log

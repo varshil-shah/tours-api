@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
+const fs = require('fs');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const cors = require('cors');
@@ -93,7 +94,13 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // development logging
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  const logStream = fs.createWriteStream(path.join(__dirname, 'logs.txt'), {
+    flags: 'a',
+  });
+  app.use(morgan('dev'));
+  app.use(morgan('combined', { stream: logStream }));
+}
 
 // test middleware
 app.use((req, res, next) => {
