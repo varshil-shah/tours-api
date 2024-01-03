@@ -2,123 +2,76 @@
 
 # Natours Tours API
 
-Tours API is a RESTful API that allows users to view all available tours, book tours using Stripe payment gateway, rate tours after completion, filter tours based on their needs, and see all reviews based on tours. It also supports many more features, such as creating and managing user accounts, adding and editing tours, and managing reviews.
+The Tours API is a robust RESTful interface designed to provide users with comprehensive functionalities for managing tours. Users can access a variety of features including viewing available tours, booking them through the Stripe payment gateway, rating tours post-completion, and employing filters, pagination, and sorting mechanisms. The API supports additional capabilities such as user account creation and management, tour addition and editing, and review administration. Notably, the implementation incorporates Redis caching to optimize latency and speed. Security measures are heightened through strong encryption, compression techniques, and rate limiting. Furthermore, the project integrates utility methods for email communication using nodemailer (SendGrid) and facilitates file uploads to external storage solutions like Cloudinary or ImageKit.
 
-The APIs are hosted at -
+## Key features -
 
-- [render](https://varshil-shah-tours-api.onrender.com)
-- [cyclic](https://varshil-shah-natours-api.cyclic.app)
+1. **Functionality**: View and book tours, rate completed tours, filter and sort tours, manage user accounts, and administer reviews.
+2. **Performance Optimization**: Redis caching is employed to enhance latency and speed.
+3. **Security Measures**: Strong encryption, compression, and rate limiting mechanisms are implemented.
+4. **Third-Party Integrations**: Utilizes Stripe for payment processing, nodemailer (SendInBlue) for email communication, and Cloudinary/ImageKit for external file storage.
+5. **Comprehensive Features**: Supports pagination, sorting, and filtering tour-related operations.
 
-Sites will take little time to load, as of now they are been hosted on free servers.
+## Table of Contents
 
-The complete documentation of an API is available here [Postman Natours API Documentation]() Feel free to test and do ping me if you find any issues.
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Documentation](https://documenter.getpostman.com/view/15093060/Tz5tZ6Zo)
+- [Built With](#built-with)
+- [License](#license)
 
-## User credentials
+## Prerequisites
 
-email: `john@doe.com`
+1. Your system should have Node.js installed. If not, you can install it from [here](https://nodejs.org/en/download/).
+2. You should have a MongoDB Atlas account. If not, you can create one from [here](https://www.mongodb.com/cloud/atlas/register).
+3. You should have a Stripe account. If not, you can create one from [here](https://dashboard.stripe.com/register).
+4. You should have a SendInBlue account. If not, you can create one from [here](https://www.sendinblue.com/).
+5. You should have a ImageKit account. If not, you can create one from [here](https://imagekit.io/).
+6. For testing, you can use Postman or Insomnia or ThunderClient extension available on VSCode.
+7. For caching, you should have a Redis account. In this project, I've using redis from render.com. If not, you can create one from [here](https://render.com/).
 
-password: `Test@1234`
+## Installation
 
-## Tours
+1. Clone the repository
 
-Our versatile routes empower you to seamlessly manage tours. Whether you're retrieving all tours, specific ones, or exploring geospatial data within a radius, we've got you covered. Admins and lead guides can create and update tours, while everyone can access tour stats.
+```sh
+git clone https://github.com/varshil-shah/tours-api.git
+```
 
-### Tour Endpoints -
+2. Install NPM packages
 
-#### Get all tours
+```sh
+npm install or yarn install
+```
 
-Endpoint: `/api/v1/tours`
+3. Create a .env file in the root directory, same as the .env.example file, and add the environment variables
+4. Run the application
 
-Description: Get all the tours.
+```sh
+npm start or yarn start
+```
 
-Parameters:
+## Usage
 
-- `sort` (`string`, example: `-price,ratingsAverage`)
-  - Allows user to sort tours in ascending and descending order. Use (-) to sort in descending order.
-- `page` (`number`, `default=1`)
-  - Allows user to access certain page of an API.
-- `limit` (`number`, `default=10`)
-  - Limits the number of results.
-- `duration[gte]` (`number`, example: `5`)
-  - Allows user to filter tours based on duration. On numbers, you can use (gte - greater than or equal to, lte - less than or equal, gt - greater than and lt - less than) to filter data.
-- `price[lt]` (`number`, example: `1500`)
-  - Allows user to filter tours based on price. On numbers, you can use (gte - greater than or equal to, lte - less than or equal, gt - greater than and lt - less than) to filter data.
-- `fields` (`string`, example: `name,price,difficulty,duration`)
-  - Allows user to projects certain fields from the incoming data.
-- `difficulty` (`string`, types: `easy, medium, difficulty`)
-  - Filters data based on difficulty level (easy, medium and difficult).
+1. Helps you to create, read, update and delete tours, users, reviews and bookings.
+2. Provides you with the ability to filter, sort and paginate tours and other models too.
+3. Integrate the API to any frontend application and use our API to create a fully functional tours website.
+4. Manage your users, tours, reviews and bookings with ease.
 
-Response:
+## Built With
 
-- status (`string`)
-  - The status of the request. Possible values are `success, fail and error`.
-- results (`number`)
-  - Total number of results available.
-- data (`object`)
-  - Response from the server.
+- [Node.js](https://nodejs.org/en/) - Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
+- [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js.
+- [MongoDB](https://www.mongodb.com/) - MongoDB is a general purpose, document-based, distributed database built for modern application developers and for the cloud era.
+- [Mongoose](https://mongoosejs.com/) - Elegant MongoDB object modeling for Node.js.
+- [Redis](https://redis.io/) - Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker.
+- [JWT](https://jwt.io/) - JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties.
 
-### User
+## License
 
-Users need to sign up in order to purchase tours. This folder will allow you to manage all operations related to users
+MIC License
 
-#### Endpoints for User
+## Acknowledgements
 
-| **Name**            | **Type** | **Endpoint**            |
-| ------------------- | -------- | ----------------------- |
-| Get all Users       | GET      | /api/v1/users           |
-| Get User            | GET      | /api/v1/users/{id}      |
-| Get Current User    | GET      | /api/v1/users/me        |
-| Update User         | PATCH    | /api/v1/users/{id}      |
-| Update Current User | PATCH    | /api/v1/users/update-me |
-| Delete Current User | PATCH    | /api/v1/users/delete-me |
-| Delete User         | DELETE   | /api/v1/users/{id}      |
-
-### Authentication
-
-Sign up providing your name, email, and password. You can set your profile picture later. The email must be unique (never used to create an account before).
-
-#### Endpoints for Authentication
-
-| **Name**                     | **Type** | **Endpoint**                         |
-| ---------------------------- | -------- | ------------------------------------ |
-| Sign Up                      | POST     | /api/v1/users/signup                 |
-| Login                        | POST     | /api/v1/users/login                  |
-| Forgot Password              | POST     | /api/v1/users/forgot-password        |
-| Reset Password               | PATCH    | /api/v1/users/reset-password/{token} |
-| Update Current User Password | PATCH    | /api/v1/users/update-my-password     |
-
-### Review
-
-Users, who have created an account or are currently logged in can perform CURD operation on Review collection.
-
-#### Endpoints for Review
-
-| **Name**          | **Type** | **Endpoint**         |
-| ----------------- | -------- | -------------------- |
-| Get all Reviews   | GET      | /api/v1/reviews      |
-| Get Review        | GET      | /api/v1/reviews/{id} |
-| Create New Review | POST     | /api/v1/reviews      |
-| Update Review     | PATCH    | /api/v1/reviews/{id} |
-| Delete Review     | DELETE   | /api/v1/reviews/{id} |
-
-### Reviews on Tour
-
-On this endpoints, a user can create and get all reviews on a specific tour.
-
-#### Endpoints for Reviews on Tour
-
-| **Name**              | **Type** | **Endpoint**                   |
-| --------------------- | -------- | ------------------------------ |
-| Create Review on Tour | POST     | /api/v1/tours/{TourId}/reviews |
-| Get Review on Tour    | GET      | /api/v1/tours/{TourId}/reviews |
-
-### Bookings
-
-A new booking is generated every time someone books a tour and it contains information about the purchase. Only admins and lead-guides have access to this data.
-
-#### Endpoints for bookings
-
-| **Name**         | **Type** | **Endpoint**          |
-| ---------------- | -------- | --------------------- |
-| Get all Bookings | GET      | /api/v1/bookings      |
-| Get Booking      | GET      | /api/v1/bookings/{id} |
+Thanks to Jonas Schmedtmann for his amazing course on Node.js, Express.js, MongoDB and Mongoose.
