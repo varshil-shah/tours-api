@@ -1,8 +1,9 @@
-![Natours-Logo](public/img/logo-green.png)
-
-# Natours Tours API
+# Tours API
 
 The Tours API is a robust RESTful interface designed to provide users with comprehensive functionalities for managing tours. Users can access a variety of features including viewing available tours, booking them through the Stripe payment gateway, rating tours post-completion, and employing filters, pagination, and sorting mechanisms. The API supports additional capabilities such as user account creation and management, tour addition and editing, and review administration. Notably, the implementation incorporates Redis caching to optimize latency and speed. Security measures are heightened through strong encryption, compression techniques, and rate limiting. Furthermore, the project integrates utility methods for email communication using nodemailer (SendGrid) and facilitates file uploads to external storage solutions like Cloudinary or ImageKit.
+
+- The complete project is deployed on Render and can be accessed [here](https://varshil-shah-tours-api.onrender.com).
+- _Note: The API is currently hosted on a free Render plan and may take a few seconds to load for the first time._
 
 ## Key features -
 
@@ -17,8 +18,10 @@ The Tours API is a robust RESTful interface designed to provide users with compr
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API Documentation](https://documenter.getpostman.com/view/15093060/Tz5tZ6Zo)
+- [API Documentation](https://documenter.getpostman.com/view/18988098/2s9YsFFEQW)
 - [Built With](#built-with)
+- [Difficulties Faced](#difficulties-faced)
+- [Future Scope](#future-scope)
 - [License](#license)
 
 ## Prerequisites
@@ -66,11 +69,25 @@ npm start or yarn start
 - [MongoDB](https://www.mongodb.com/) - MongoDB is a general purpose, document-based, distributed database built for modern application developers and for the cloud era.
 - [Mongoose](https://mongoosejs.com/) - Elegant MongoDB object modeling for Node.js.
 - [Redis](https://redis.io/) - Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker.
-- [JWT](https://jwt.io/) - JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties.
+- [JWT](https://jwt.io/) - JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely
+  between two parties.
+
+## Difficulties Faced
+
+- The most difficult part of the project was to implement the file upload feature. I had to go through the documentation of ImageKit to understand how to upload files to their servers. I also had to go through the documentation of multer and sharp to understand how to upload files to the local server.
+- The second most difficult part of the project was to implement the payment feature. I had to go through the documentation of Stripe to understand how to implement the payment feature in the application.
+- The third most difficult part of the project was to implement the filtering, sorting and pagination feature. I had to go through the documentation of Mongoose to understand how to implement the filtering, sorting and pagination feature in the application.
+
+## Future Scope
+
+- Add a frontend application to the API.
+- Implement access and refresh tokens for better security.
+- Implement maximum login attempts and lockout mechanism.
+- Add a feature to search tours by location.
 
 ## License
 
-MIC License
+MIT License
 
 ## Acknowledgements
 
